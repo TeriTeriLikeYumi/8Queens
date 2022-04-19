@@ -139,6 +139,11 @@ def convertRuleToArray(f):
                 #format not(p[i][j])
                 i = int(element[6]) 
                 j = int(element[9]) 
+                k = -1
+            else:
+                #format p[i][j]
+                i = int(element[2]) 
+                j = int(element[5]) 
                 k = 1
             
             z = (8 * i + j + 1) * k
