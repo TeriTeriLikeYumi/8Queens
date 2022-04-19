@@ -197,4 +197,4 @@ def writeArrayIntoFile(path, array):
     f.write("\n")
     f.close()
 
-writeArrayIntoFile("SolvingTaskC",arraylv2)
+writeArrayIntoFile("SolvingTaskD",arraylv2)
