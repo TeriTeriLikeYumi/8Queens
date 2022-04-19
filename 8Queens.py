@@ -174,5 +174,25 @@ def writeSolutionIntoFile(path, array):
         f.write("\n")
     f.close()
     
-writeSolutionIntoFile("level01sol.txt", arraylv1)
-writeSolutionIntoFile("level02sol.txt", arraylv2)
+writeSolutionIntoFile("level01sol", arraylv1)
+writeSolutionIntoFile("level02sol", arraylv2)
+
+#--------------------------------------------------
+#--------------------------------------------------
+#--------------------------------------------------
+#Task D
+
+def writeArrayIntoFile(path, array):
+    board = Glucose3()  
+    for item in arraylv2:
+        board.add_clause(item)
+    
+    board.solve(assumptions = [4, 10])
+    array = board.get_model()
+    
+    f = open(path, "w")
+  
+        
+    f.write([item for item in array if item >0])
+    f.write("\n")
+    f.close()
