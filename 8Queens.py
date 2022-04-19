@@ -60,7 +60,7 @@ def outputColumnAtMost1(f):
                 f.write("not(p[%d][%d]) v not(p[%d][%d])" % (j,i,k,i))
                 if (i != SIZE-1 or j != SIZE-2 or k != SIZE-1):
                     f.write("\n")
-        f.write("\n")
+    f.write("\n")
 
 #NO MORE THAN 1 QUEEN IN THE LEFT DIAGONAL & RIGHT DIAGONAL
 def outputAtMostOneQueenInDiagonal(f):
@@ -68,7 +68,7 @@ def outputAtMostOneQueenInDiagonal(f):
     Outputs the left diagonal and right diagonal of the table at most 1.
     """
     for i in range(SIZE*SIZE - 1):
-        for j in range(i+1, SIZE*SIZE):
+        for j in range(i + 1, SIZE*SIZE):
              if((i % SIZE + int(i/SIZE)) == (j % SIZE + int(j/SIZE)) or  (i%SIZE - int(i/SIZE)) == (j%SIZE - int(j/SIZE))):
                     f.write("not(p[%d][%d]) v not(p[%d][%d])\n" % (i%SIZE,int(i/SIZE),j%SIZE,int(j/SIZE)))
                     
@@ -83,6 +83,7 @@ def writingRuleCNFLevel02(f):
     outputRowAtMost1(f)
     outputColumnAtLeast1(f)
     outputColumnAtMost1(f)
+    outputAtMostOneQueenInDiagonal(f)
     f.close()
 
 writingRuleCNFLevel01(f1)
@@ -148,12 +149,13 @@ def convertRuleToArray(f):
             
             z = (8 * i + j + 1) * k
             arrayItem.append(z)
-    
-    if len(arrayItem) != 0:
-        array.append(arrayItem)
+            
+        if len(arrayItem) != 0:
+            array.append(arrayItem)
         
-    if not fileline:
-        a = False
+        #Loop out of the file
+        if not fileline:
+            a = False
         
     f.close()
     return deepcopy(array)
@@ -172,5 +174,5 @@ def writeSolutionIntoFile(path, array):
         f.write("\n")
     f.close()
     
-writeSolutionIntoFile("level01sol", arraylv1)
-writeSolutionIntoFile("level02sol", arraylv2)
+writeSolutionIntoFile("level01sol.txt", arraylv1)
+writeSolutionIntoFile("level02sol.txt", arraylv2)
