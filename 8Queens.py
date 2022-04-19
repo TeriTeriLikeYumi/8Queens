@@ -184,15 +184,17 @@ writeSolutionIntoFile("level02sol", arraylv2)
 
 def writeArrayIntoFile(path, array):
     board = Glucose3()  
-    for item in arraylv2:
+    for item in array:
         board.add_clause(item)
     
     board.solve(assumptions = [4, 10])
-    array = board.get_model()
+    tempArray = board.get_model()
     
     f = open(path, "w")
   
         
-    f.write([item for item in array if item >0])
+    f.write([item for item in tempArray if item >0])
     f.write("\n")
     f.close()
+
+writeArrayIntoFile("SolvingTaskC",arraylv2)
