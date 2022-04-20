@@ -1,10 +1,10 @@
 from numpy import true_divide
 from pysat.solvers import Glucose3
 from pysat.solvers import Lingeling
+from queue import PriorityQueue
+import re
 from copy import deepcopy
 SIZE = 8
-f1 = open("level01", "w")
-f2 = open("level02", "w")
 
 #--------------------------------------------------
 #--------------------------------------------------
@@ -14,7 +14,7 @@ f2 = open("level02", "w")
 #ONE QUEEN IN A ROW
 def outputRowAtLeast1(f):
     """
-    Outputs a row of the table at least 1.
+    Outputs a row o the table at least 1.
     """
     for i in range (SIZE):
         for j in range (SIZE):
@@ -95,6 +95,10 @@ def writingRuleCNFLevel02(f):
     outputAtMostOneQueenInDiagonal(f)
     f.close()
 
+#Two Rule CNF of Queens placement
+f1 = open("Level01", "w")
+f2 = open("Level02", "w")
+
 writingRuleCNFLevel01(f1)
 writingRuleCNFLevel02(f2)
 
@@ -102,24 +106,26 @@ writingRuleCNFLevel02(f2)
 #--------------------------------------------------
 #--------------------------------------------------
 #Task B
-filepath = "level02"
-filetext = open(filepath, "r")
+def QueenRestriction(path):
+    fread = open(path, "r")
+    fwrite = open("SolvingTaskB", "w")
 
-filewrite = open("SolvingTaskB", "w")
+    advancePlaced = [3][3]
 
-keyword = "p[3][3]"
-
-a = True
-while a:
-    fileline = filetext.readline()
-    if keyword in fileline:
-        filewrite.write(fileline)
+    a = True
+    while a:
+        line = fread.readline()
+        if advancePlaced in line:
+            fwrite.write(line)
     
-    if not fileline:
-        a = False
-        
-filewrite.close()
-filetext.close()
+        if not line:
+            a = False
+            
+    fread.close()   
+    fwrite.close()
+    
+#Follow the task, queen are placed at (3,3) by default
+QueenRestriction("Level02")
 
 #--------------------------------------------------
 #--------------------------------------------------
@@ -164,12 +170,15 @@ def convertRuleToArray(f):
     f.close()
     return deepcopy(array)
 
-f1 = open("level01", "r")
-f2 = open("level02", "r")
+#Open 2 files to convert the rules to arrays
+f1 = open("Level01", "r")
+f2 = open("Level02", "r")
 
-arraylv1 = convertRuleToArray(f1)
-arraylv2 = convertRuleToArray(f2)
+#Convert the each rules to arrays
+arraylv01 = convertRuleToArray(f1)
+arraylv02 = convertRuleToArray(f2)
 
+#Write the array to a file
 def writeSolutionIntoFile(path, array):
     f = open(path, "w")
     for items in array:
@@ -181,8 +190,8 @@ def writeSolutionIntoFile(path, array):
         f.write("\n")
     f.close()
     
-writeSolutionIntoFile("level01sol", arraylv1)
-writeSolutionIntoFile("level02sol", arraylv2)
+writeSolutionIntoFile("SolvingTaskC_1", arraylv01)
+writeSolutionIntoFile("SolvingTaskC_2", arraylv02)
 #--------------------------------------------------
 #--------------------------------------------------
 #--------------------------------------------------
@@ -193,9 +202,10 @@ def pySATSolver(path):
     array = Glucose3()
     #Choosing lv2 as the input file
     #SAT solver need row,column,diagonal 
-    for element in arraylv2:
+    for element in arraylv02:
         array.add_clause(element)
     
+    #Pick random a solution
     array.solve(assumptions=[6,9])
     tmpArray = array.get_model()
     
@@ -203,3 +213,28 @@ def pySATSolver(path):
     f.close()
    
 pySATSolver("SolvingTaskD") 
+
+#Task E
+def checkValid(path):
+    f = open(path,"r")
+    array = []
+    f.
+    
+    filepath = "level02"
+filetext = open(filepath, "r")
+
+filewrite = open("SolvingTaskB", "w")
+
+keyword = "p[3][3]"
+
+a = True
+while a:
+    fileline = filetext.readline()
+    if keyword in fileline:
+        filewrite.write(fileline)
+    
+    if not fileline:
+        a = False
+        
+filewrite.close()
+filetext.close()
