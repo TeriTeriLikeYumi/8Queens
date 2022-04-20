@@ -4,4 +4,4 @@
 - Task B: CNF clause for queen at cell[3][3] :white_check_mark:
 - Task C: Convert cnf back to sentences :white_check_mark:
 - Task D: Using pySAT solver to find set of satisfied values of Queens's position :white_check_mark:
-- Task E: A* coding... :x: /play drama
+- Task E: A* coding... :x: 
