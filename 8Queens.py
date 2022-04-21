@@ -1,6 +1,7 @@
 from numpy import true_divide
 from pysat.solvers import Glucose3
 from pysat.solvers import Lingeling
+from pysat.formula import CNF
 from queue import PriorityQueue
 import re
 from copy import deepcopy
@@ -12,7 +13,7 @@ SIZE = 8
 #Task A
 
 #ONE QUEEN IN A ROW
-def outputRowAtLeast1(f):
+def Row(f):
     """
     Outputs a row o the table at least 1.
     """
@@ -25,12 +26,9 @@ def outputRowAtLeast1(f):
                 f.write("p[%d][%d]" % (i, j))
             
             #Check whether it is the last element in the row
-            if j == SIZE-1 and i != SIZE-1:
-                f.write("\n")
-            elif j == SIZE-1 and i == SIZE-1:
+            if j == SIZE-1:
                 f.write("\n")
                 
-def outputRowAtMost1(f):
     """
     Outputs a row of the table at most 1.
     """
@@ -40,9 +38,9 @@ def outputRowAtMost1(f):
                 #Restrict element in the row to be 1
                 f.write("not(p[%d][%d]) v not(p[%d][%d])" % (i, j, i, k))
                 f.write("\n")
-
+               
 #ONE QUEEN IN A COLUMN
-def outputColumnAtLeast1(f):
+def Column(f):
     """
     Outputs a column of the table at least 1.
     """
@@ -55,12 +53,8 @@ def outputColumnAtLeast1(f):
                 f.write("p[%d][%d]" % (j,i))
                 
             #Check whether it is the last element in the column
-            if j == SIZE-1 and i != SIZE-1:
+            if j == SIZE-1:
                 f.write("\n")
-            elif j == SIZE-1 and i == SIZE-1:
-                f.write("\n")
-                
-def outputColumnAtMost1(f):
     """
     Outputs a column of the table at most 1.
     """
@@ -68,31 +62,28 @@ def outputColumnAtMost1(f):
         for j in range(SIZE-1):
             for k in range (j+1, SIZE):
                 #Restrict element in the column to be 1
-                f.write("not(p[%d][%d]) v not(p[%d][%d])\n" % (j, i , k , i)) #Similar to the row just swap the i 
-    
+                f.write("not(p[%d][%d]) v not(p[%d][%d])\n" % (j, i , k , i)) #Similar to row function just swap i                 
 
-#NO MORE THAN 1 QUEEN IN THE LEFT DIAGONAL & RIGHT DIAGONAL
-def outputAtMostOneQueenInDiagonal(f):
+#NO MORE THAN 1 QUEEN IN DIAGONALS
+def Diagonal(f):
     """
     Outputs the left diagonal and right diagonal of the table at most 1.
     """
     for i in range(SIZE*SIZE - 1):
         for j in range(i + 1, SIZE*SIZE):
-             if((i % SIZE + int(i/SIZE)) == (j % SIZE + int(j/SIZE)) or  (i%SIZE - int(i/SIZE)) == (j%SIZE - int(j/SIZE))):
+             if((i % SIZE + int(i/SIZE)) == (j % SIZE + int(j/SIZE)) or  (i%SIZE - int(i/SIZE)) == (j%SIZE - int(j/SIZE))): #Left or right diagonal cells are the same
                     f.write("not(p[%d][%d]) v not(p[%d][%d])\n" % (i%SIZE,int(i/SIZE),j%SIZE,int(j/SIZE)))
-                    
-def writingRuleCNFLevel01(f):
-    outputRowAtLeast1(f)
-    outputRowAtMost1(f)
-    outputAtMostOneQueenInDiagonal(f)
+
+#Create file with the rules            
+def writingRuleCNFLevel01(f): #Each queens can only move on a single column
+    Row(f)
+    Diagonal(f)
     f.close()
     
-def writingRuleCNFLevel02(f):
-    outputRowAtLeast1(f)
-    outputRowAtMost1(f)
-    outputColumnAtLeast1(f)
-    outputColumnAtMost1(f)
-    outputAtMostOneQueenInDiagonal(f)
+def writingRuleCNFLevel02(f): #Queens can be placed at any cell on the chessboard
+    Row(f)
+    Column(f)
+    Diagonal(f)
     f.close()
 
 #Two Rule CNF of Queens placement
@@ -106,15 +97,16 @@ writingRuleCNFLevel02(f2)
 #--------------------------------------------------
 #--------------------------------------------------
 #Task B
-def QueenRestriction(path):
-    fread = open(path, "r")
-    fwrite = open("SolvingTaskB", "w")
+def QueenRestriction(read,write):
+    fread  = open(read, "r")
+    fwrite = open(write, "w")
 
-    advancePlaced = [3][3]
+    advancePlaced = "p[3][3]"
 
     a = True
     while a:
         line = fread.readline()
+        #Find all placed related to a specific queen
         if advancePlaced in line:
             fwrite.write(line)
     
@@ -125,7 +117,7 @@ def QueenRestriction(path):
     fwrite.close()
     
 #Follow the task, queen are placed at (3,3) by default
-QueenRestriction("Level02")
+QueenRestriction("Level02","SolvingTaskB")
 
 #--------------------------------------------------
 #--------------------------------------------------
@@ -196,7 +188,7 @@ writeSolutionIntoFile("SolvingTaskC_2", arraylv02)
 #--------------------------------------------------
 #--------------------------------------------------
 #Task D
-def pySATSolver(path):
+def pySATSolver(path,position):
     f = open(path,"w")
     
     array = Glucose3()
@@ -206,35 +198,15 @@ def pySATSolver(path):
         array.add_clause(element)
     
     #Pick random a solution
-    array.solve(assumptions=[6,9])
-    tmpArray = array.get_model()
-    
-    f.write(str([element for element in tmpArray if element > 0]))
+    if array.solve(assumptions = position):
+        tmpArray = array.get_model()
+        f.write(str([element for element in tmpArray if element > 0]))
+    else:
+        f.write("No solution")
     f.close()
-   
-pySATSolver("SolvingTaskD") 
 
+QueenPosition = [1] 
+pySATSolver("SolvingTaskD",QueenPosition) 
+#--------------------------------------------------
+#--------------------------------------------------
 #Task E
-def checkValid(path):
-    f = open(path,"r")
-    array = []
-    f.
-    
-    filepath = "level02"
-filetext = open(filepath, "r")
-
-filewrite = open("SolvingTaskB", "w")
-
-keyword = "p[3][3]"
-
-a = True
-while a:
-    fileline = filetext.readline()
-    if keyword in fileline:
-        filewrite.write(fileline)
-    
-    if not fileline:
-        a = False
-        
-filewrite.close()
-filetext.close()
