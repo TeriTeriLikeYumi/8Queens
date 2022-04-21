@@ -36,8 +36,7 @@ def Row(f):
         for j in range (SIZE-1):
             for k in range(j+1, SIZE):
                 #Restrict element in the row to be 1
-                f.write("not(p[%d][%d]) v not(p[%d][%d])" % (i, j, i, k))
-                f.write("\n")
+                f.write("not(p[%d][%d]) v not(p[%d][%d])\n" % (i, j, i, k))
                
 #ONE QUEEN IN A COLUMN
 def Column(f):
@@ -200,12 +199,13 @@ def pySATSolver(path,position):
     #Pick random a solution
     if array.solve(assumptions = position):
         tmpArray = array.get_model()
+        f.write("Solution found\n")
         f.write(str([element for element in tmpArray if element > 0]))
     else:
         f.write("No solution")
     f.close()
 
-QueenPosition = [1] 
+QueenPosition = [6,64] #1->64
 pySATSolver("SolvingTaskD",QueenPosition) 
 #--------------------------------------------------
 #--------------------------------------------------
