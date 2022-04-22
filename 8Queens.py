@@ -1,9 +1,6 @@
 from numpy import true_divide
 from pysat.solvers import Glucose3
 from pysat.solvers import Lingeling
-from pysat.formula import CNF
-from queue import PriorityQueue
-import re
 from copy import deepcopy
 SIZE = 8
 
@@ -132,7 +129,7 @@ def convertRuleToArray(f):
         if len(lines) == 0:
             break
         line = lines.split(" v ")
-        arrayItem = []
+        tmp = []
         for element in line:
             if element == "":
                 continue
@@ -148,13 +145,12 @@ def convertRuleToArray(f):
                 k = 1
             
             #K for the sign
-            arrayItem.append(convertInteger(i,j)*k)
-            
-        if len(arrayItem) != 0:
-            array.append(arrayItem)
-        
-        #Loop out of the file
-        
+            tmp.append(convertInteger(i,j)*k)
+           
+        #Not empty 
+        if len(tmp) != 0:
+            array.append(tmp)
+         
     f.close()
     #Copy array using deepcopy
     return deepcopy(array)
@@ -209,12 +205,13 @@ def pySATSolver(path,position):
     f = open(path,"w")
     
     array = Glucose3()
+    
     #Choosing lv2 as the input file
     #SAT solver need row,column,diagonal 
     for element in arraylv02:
         array.add_clause(element)
     
-    #Pick random a solution
+    #Pick position from the existing array
     if array.solve(assumptions = position):
         tmpArray = array.get_model()
         f.write("Solution found\n")
