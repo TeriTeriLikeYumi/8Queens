@@ -100,17 +100,13 @@ def QueenRestriction(read,write):
     fread  = open(read, "r")
     fwrite = open(write, "w")
 
-    advancePlaced = "p[3][3]"
-
-    a = True
-    while a:
+    while True:
         line = fread.readline()
+        if len(line) == 0:
+            break
         #Find all placed related to a specific queen
-        if advancePlaced in line:
+        if "p[3][3]" in line:
             fwrite.write(line)
-    
-        if not line:
-            a = False
             
     fread.close()   
     fwrite.close()
@@ -122,22 +118,25 @@ QueenRestriction("Level02","SolvingTaskB")
 #--------------------------------------------------
 #--------------------------------------------------
 #Task C 
+def convertInteger(x,y):
+    return x*8+y+1
+
 def convertRuleToArray(f):
     """
     Converts a rule to an array.
     """
-    a = True
     array = []
-    k = 0
-    
-    while a:
-        fileline = f.readline()
-        line = fileline.split(" v ")
+
+    while True:
+        lines = f.readline()
+        if len(lines) == 0:
+            break
+        line = lines.split(" v ")
         arrayItem = []
         for element in line:
             if element == "":
                 continue
-            if element[0] == "n":
+            if element[0] == "n": 
                 #format not(p[i][j])
                 i = int(element[6]) 
                 j = int(element[9]) 
@@ -148,17 +147,16 @@ def convertRuleToArray(f):
                 j = int(element[5]) 
                 k = 1
             
-            z = (8 * i + j + 1) * k
-            arrayItem.append(z)
+            #K for the sign
+            arrayItem.append(convertInteger(i,j)*k)
             
         if len(arrayItem) != 0:
             array.append(arrayItem)
         
         #Loop out of the file
-        if not fileline:
-            a = False
         
     f.close()
+    #Copy array using deepcopy
     return deepcopy(array)
 
 #Open 2 files to convert the rules to arrays
@@ -187,6 +185,26 @@ writeSolutionIntoFile("SolvingTaskC_2", arraylv02)
 #--------------------------------------------------
 #--------------------------------------------------
 #Task D
+def visulize(queens=[]):
+    """
+    Visualize the chessboard with the queens.
+    """
+    #Create a chessboard
+    chessboard = [False for i in range(SIZE*SIZE)]
+    #Place the queens
+    for queen in queens:
+        chessboard[queen-1] = True
+    
+    #Print the chessboard
+    for i in range(SIZE*SIZE): 
+        if i%SIZE == 0 and i != 0:
+            print("\n")
+        if chessboard[i]:
+            print("Q", end = " ")
+        else:
+            print(".", end = " ")
+        
+ 
 def pySATSolver(path,position):
     f = open(path,"w")
     
@@ -200,12 +218,16 @@ def pySATSolver(path,position):
     if array.solve(assumptions = position):
         tmpArray = array.get_model()
         f.write("Solution found\n")
-        f.write(str([element for element in tmpArray if element > 0]))
+        
+        tmp =[element for element in tmpArray if element > 0]
+        visulize(tmp)
+        f.write(str(tmp))
     else:
-        f.write("No solution")
+        print("No solution found")
+        f.write("No solution found")
     f.close()
 
-QueenPosition = [6,64] #1->64
+QueenPosition = [1,30] #1->64
 pySATSolver("SolvingTaskD",QueenPosition) 
 #--------------------------------------------------
 #--------------------------------------------------
