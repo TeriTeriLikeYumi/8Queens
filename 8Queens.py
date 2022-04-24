@@ -224,7 +224,7 @@ def pySATSolver(path,position):
         f.write("No solution found")
     f.close()
 
-QueenPosition = [1,30] #1->64
+QueenPosition = [2,4] #1->64
 pySATSolver("SolvingTaskD",QueenPosition) 
 #--------------------------------------------------
 #--------------------------------------------------
